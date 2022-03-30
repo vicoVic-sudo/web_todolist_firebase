@@ -11,6 +11,10 @@ import {
     getDoc,
     updateDoc
 } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-firestore.js"
+
+import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-storage.js";
+import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-auth.js";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -27,12 +31,20 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
+// Get a reference to the storage service, which is used to create references in your storage bucket
+const storage = getStorage(app);
+// Create reference for authentication
+const auth = getAuth(app);
+
+
 const db = getFirestore()
 
-export const saveTask = (title, description) => {
+export const saveTask = (title, description, duedate, registerdate) => {
     addDoc(collection(db, 'tasks'), {
         title,
-        description
+        description,
+        duedate,
+        registerdate
     });
 }
 
@@ -45,3 +57,19 @@ export const deleteTask = (id) => deleteDoc(doc(db, 'tasks',id));
 export const getTask = id => getDoc(doc(db,'tasks',id));
 
 export const updateTask = (id, newFields) => updateDoc(doc(db,'tasks',id), newFields);
+
+export const uploadImage = (imgFile,name, idTask) => {
+    const storageRef = ref(storage, name);
+    let imageUrl = `https://firebasestorage.googleapis.com/v0/b/todolist-37d98.appspot.com/o/${name}?alt=media`;
+
+    // 'file' comes from the Blob or File API
+    uploadBytes(storageRef, imgFile).then((snapshot) => {                
+        
+        let jsonData = {
+            imgURL: imageUrl,        
+        }      
+        updateDoc(doc(db,'tasks',idTask), jsonData);
+    });
+
+    return true;
+}
