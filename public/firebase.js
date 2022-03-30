@@ -13,7 +13,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-firestore.js"
 
 import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-storage.js";
-import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut} from "https://www.gstatic.com/firebasejs/9.6.9/firebase-auth.js";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -26,7 +26,7 @@ const firebaseConfig = {
     storageBucket: "todolist-37d98.appspot.com",
     messagingSenderId: "12209993327",
     appId: "1:12209993327:web:a29d4ac99e9e9fa2e3ff9a"
-};
+  };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -39,12 +39,13 @@ const auth = getAuth(app);
 
 const db = getFirestore()
 
-export const saveTask = (title, description, duedate, registerdate) => {
+export const saveTask = (title, description, duedate, registerdate, emailUser) => {
     addDoc(collection(db, 'tasks'), {
         title,
         description,
         duedate,
-        registerdate
+        registerdate,
+        emailUser
     });
 }
 
@@ -72,4 +73,52 @@ export const uploadImage = (imgFile,name, idTask) => {
     });
 
     return true;
+}
+
+
+export const createUser = (email,password) => {
+
+    createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {                
+        const user = userCredential.user;        
+    })
+    .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+    });
+}
+
+export const loginUser = (email,password) => {
+
+    signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
+    // Signed in
+    
+    const user = userCredential.user;
+    sessionStorage.setItem("emailUser", `${user.email}`);    
+
+    Swal.fire({
+        title: 'Access Granted',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        onClose: () => {
+            clearInterval(timerInterval)
+        }
+    }).then((result) => {          
+        window.location='dashboard.html';
+    })
+
+    // ...
+    })
+    .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+
+    
+    });
+}
+
+export const logoutUser = () => {
+    signOut(auth);
 }

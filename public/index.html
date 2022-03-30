@@ -42,18 +42,18 @@
 
 <body class="text-center">
 
-  <div class="form-signin">
-    <img class="mb-4" src="assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputEmail" class="sr-only">Email address</label>
-    <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-    <label for="inputPassword" class="sr-only">Password</label>
-    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-    <button class="btn btn-lg btn-success btn-block" type="submit" onClick="window.location='signup.html'">Sign up</button>
+  <div class="form-signin">    
+    <h1 class="h3 mb-3 font-weight-normal">Log In</h1>
+    <label for="txtEmailUser" class="sr-only">Email address</label>
+    <input type="email" id="txtEmailUser" class="form-control" placeholder="Email address" required autofocus>
+    <label for="txtPasswordUser" class="sr-only">Password</label>
+    <input type="password" id="txtPasswordUser" class="form-control" placeholder="Password" required>
+    <button class="btn btn-lg btn-primary btn-block" id="btnLoginUser">Sign in</button>
+    <button class="btn btn-lg btn-success btn-block"  onClick="window.location='signup.html'">Sign up</button>
     <p class="mt-5 mb-3 text-muted">&copy; 2017-2021</p>
   </div>
-
+  
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="./login.js" type="module"></script>   
 
 </body>

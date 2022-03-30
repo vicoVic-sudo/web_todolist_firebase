@@ -4,52 +4,56 @@ const taskContainer = document.getElementById('task-container')
 const btnSave = document.getElementById('btnSave');
 const btnUpdate = document.getElementById('btnSaveTwo');
 const btnSaveImage = document.getElementById('btnSaveThree');
-
+const emailUser = sessionStorage.getItem("emailUser");
+const btnLogOut = document.getElementById("btnLogOut");
 
 window.addEventListener('DOMContentLoaded', async () => {
 
   onGetTasks((querySnapshot) => {
     let html = ''
     querySnapshot.forEach(doc => {
-      const task = doc.data()            
-      html += `
-      <ul class="list-group list-group-horizontal rounded-0">
-          <li
-              class="list-group-item d-flex align-items-center ps-0 pe-3 py-1 rounded-0 border-0 bg-transparent">
-              <div class="form-check">
-                  <input class="form-check-input me-0" type="checkbox" value="">
-              </div>
-          </li>
-          <li
-              class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent">
-              <p class="lead fw-normal mb-0">${task.title}</p>
-          </li>
-          <li class="list-group-item px-3 py-1 d-flex align-items-center border-0 bg-transparent">
-              <div
-                  class="py-2 px-3 me-2 border border-success rounded-3 d-flex align-items-center bg-light">
-                  <p class="small mb-0">
-                      <a data-mdb-toggle="tooltip" title="Due on date">
-                          <i class="fas fa-hourglass-half me-2 text-success"></i>
-                      </a>
-                      ${task.duedate}
-                  </p>
-              </div>
-          </li>                          
-          <li class="list-group-item ps-3 pe-0 py-1 rounded-0 border-0 bg-transparent">
-              <div class="d-flex flex-row justify-content-end mb-1">
-                  <a href="#!" class="text-secondary" data-mdb-toggle="tooltip" title="Edit todo"><i class="fas fa-paperclip me-3 btn-attach" data-id='${doc.id}'></i></a>
-                  <a href="#!" class="text-primary" data-mdb-toggle="tooltip" title="Edit todo"><i class="fas fa-eye me-3 btn-detail" data-id='${doc.id}'></i></a>
-                  <a href="#!" class="text-warning" data-mdb-toggle="tooltip" title="Edit todo"><i class="fas fa-pencil-alt me-3 btn-edit" data-id='${doc.id}'></i></a>                  
-                  <a href="#!" class="text-danger " data-mdb-toggle="tooltip" title="Edit todo"><i class="fas fa-trash-alt btn-delete" data-id='${doc.id}'></i></a>                                                      
-              </div>
-              <div class="text-end text-muted">
-                  
-                      <p class="small mb-0"><i class="fas fa-info-circle me-2"></i>${task.registerdate}
-                      </p>
-                  
-              </div>
-          </li>
-      </ul>`
+      const task = doc.data()    
+      
+      if(emailUser == task.emailUser){
+        html += `
+        <ul class="list-group list-group-horizontal rounded-0">
+            <li
+                class="list-group-item d-flex align-items-center ps-0 pe-3 py-1 rounded-0 border-0 bg-transparent">
+                <div class="form-check">
+                    <input class="form-check-input me-0" type="checkbox" value="">
+                </div>
+            </li>
+            <li
+                class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent">
+                <p class="lead fw-normal mb-0">${task.title}</p>
+            </li>
+            <li class="list-group-item px-3 py-1 d-flex align-items-center border-0 bg-transparent">
+                <div
+                    class="py-2 px-3 me-2 border border-success rounded-3 d-flex align-items-center bg-light">
+                    <p class="small mb-0">
+                        <a data-mdb-toggle="tooltip" title="Due on date">
+                            <i class="fas fa-hourglass-half me-2 text-success"></i>
+                        </a>
+                        ${task.duedate}
+                    </p>
+                </div>
+            </li>                          
+            <li class="list-group-item ps-3 pe-0 py-1 rounded-0 border-0 bg-transparent">
+                <div class="d-flex flex-row justify-content-end mb-1">
+                    <a href="#!" class="text-secondary" data-mdb-toggle="tooltip" title="Edit todo"><i class="fas fa-paperclip me-3 btn-attach" data-id='${doc.id}'></i></a>
+                    <a href="#!" class="text-primary" data-mdb-toggle="tooltip" title="Edit todo"><i class="fas fa-eye me-3 btn-detail" data-id='${doc.id}'></i></a>
+                    <a href="#!" class="text-warning" data-mdb-toggle="tooltip" title="Edit todo"><i class="fas fa-pencil-alt me-3 btn-edit" data-id='${doc.id}'></i></a>                  
+                    <a href="#!" class="text-danger " data-mdb-toggle="tooltip" title="Edit todo"><i class="fas fa-trash-alt btn-delete" data-id='${doc.id}'></i></a>                                                      
+                </div>
+                <div class="text-end text-muted">
+                    
+                        <p class="small mb-0"><i class="fas fa-info-circle me-2"></i>${task.registerdate}
+                        </p>
+                    
+                </div>
+            </li>
+        </ul>`
+      }      
     });
 
     taskContainer.innerHTML = html
@@ -156,7 +160,7 @@ btnSave.addEventListener('click', function () {
   today = yyyy + '-' + mm + '-' + dd;
 
   
-  saveTask(title.value, description.value, dueDate.value, today);
+  saveTask(title.value, description.value, dueDate.value, today, emailUser);
 
   title.value = ''
   description.value = ''
@@ -205,4 +209,9 @@ btnSaveImage.addEventListener('click', function () {
 
   }
 
+})
+
+btnLogOut.addEventListener('click', function () {
+  sessionStorage. removeItem('emailUser');
+  window.location='index.html';
 })
